@@ -1,17 +1,20 @@
 const pixelPrompt = document.getElementById("resize-prompt");
 const pixelContainer = document.querySelector(".container");
 const defaultPixel = 16; // Default pixel size when page loads
+const pickColor = document.getElementById("pickColor");
+const eraser = document.getElementById("eraser");
+const surprise = document.getElementById("surprise");
+const reset = document.getElementById("reset");
 
-pixelContainer.style.height = "80vh"
-pixelContainer.style.width = "80vh"
-pixelContainer.style.border = "1px black solid"
-pixelContainer.style.display = "flex"
-pixelContainer.style.flexWrap = "wrap"
+let colorCode = "black";
 
 function clearContainer (x) {
     x.innerHTML = ''
 } 
 
+function randomNumGen(){
+    return Math.floor(Math.random() * 256);
+}
 
 function populatePixels(num) {
 
@@ -24,11 +27,8 @@ function populatePixels(num) {
     pixel.forEach(function (pixel) {
         pixel.style.flex = `1 1 calc(100% / ${num})`;
         pixel.style.height = `calc(100% / ${num})`;
-        if (num>50){
-            pixel.style.border = '0.001em solid #D3D3D3';
-        }
       });
-      
+      colorPixel();
 }
 
 populatePixels(defaultPixel);
@@ -39,9 +39,41 @@ pixelPrompt.addEventListener("click", function () {
     populatePixels(numPixels);
 });
 
+function colorPixel(){
 const pixels = document.querySelectorAll('.container div')
 pixels.forEach (function(color){
     color.addEventListener("mouseover", function(e) {
-        color.style.backgroundColor = 'black';
+        color.style.backgroundColor = `${colorCode}`;
     });
 });
+}
+
+eraser.addEventListener("click", function(e){
+    colorCode = "white";
+})
+
+pickColor.addEventListener("input", function(){
+    colorCode = pickColor.value;
+    console.log(colorCode);
+})
+
+
+surprise.addEventListener("click", function(){
+    function randomize(){
+    a = randomNumGen();
+    b = randomNumGen();
+    c = randomNumGen();
+    colorCode = `rgba(${a}, ${b}, ${c})`
+    }
+    const pixels = document.querySelectorAll('.container div')
+    pixels.forEach (function(color){
+    color.addEventListener("mouseover", function(e) {
+    randomize()
+    });
+})
+})
+
+reset.addEventListener("click", function(e){
+    clearContainer(pixelContainer);
+    populatePixels(defaultPixel);
+})

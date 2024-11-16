@@ -8,11 +8,13 @@ const reset = document.getElementById("reset");
 
 let colorCode = "black";
 
-function clearContainer (x) {
-    x.innerHTML = ''
-} 
+let surpriseMode = false
 
-function randomNumGen(){
+function clearContainer(x) {
+    x.innerHTML = ''
+}
+
+function randomNumGen() {
     return Math.floor(Math.random() * 256);
 }
 
@@ -27,8 +29,8 @@ function populatePixels(num) {
     pixel.forEach(function (pixel) {
         pixel.style.flex = `1 1 calc(100% / ${num})`;
         pixel.style.height = `calc(100% / ${num})`;
-      });
-      colorPixel();
+    });
+    colorPixel();
 }
 
 populatePixels(defaultPixel);
@@ -39,41 +41,47 @@ pixelPrompt.addEventListener("click", function () {
     populatePixels(numPixels);
 });
 
-function colorPixel(){
-const pixels = document.querySelectorAll('.container div')
-pixels.forEach (function(color){
-    color.addEventListener("mouseover", function(e) {
-        color.style.backgroundColor = `${colorCode}`;
+function colorPixel() {
+    const pixels = document.querySelectorAll('.container div')
+    pixels.forEach(function (color) {
+        color.addEventListener("mouseover", function (e) {
+            if (surpriseMode === true) {
+                a = randomNumGen();
+                b = randomNumGen();
+                c = randomNumGen();
+                colorCode = `rgba(${a}, ${b}, ${c})`
+            }
+            color.style.backgroundColor = `${colorCode}`;
+        });
     });
-});
 }
 
-eraser.addEventListener("click", function(e){
-    colorCode = "white";
+eraser.addEventListener("click", function (e) {
+    colorCode = "#FFFCF2";
 })
 
-pickColor.addEventListener("input", function(){
+pickColor.addEventListener("input", function () {
     colorCode = pickColor.value;
     console.log(colorCode);
 })
 
 
-surprise.addEventListener("click", function(){
-    function randomize(){
-    a = randomNumGen();
-    b = randomNumGen();
-    c = randomNumGen();
-    colorCode = `rgba(${a}, ${b}, ${c})`
+surprise.addEventListener("click", function () {
+    function randomize() {
+        a = randomNumGen();
+        b = randomNumGen();
+        c = randomNumGen();
+        colorCode = `rgba(${a}, ${b}, ${c})`
     }
     const pixels = document.querySelectorAll('.container div')
-    pixels.forEach (function(color){
-    color.addEventListener("mouseover", function(e) {
-    randomize()
-    });
-})
+    pixels.forEach(function (color) {
+        color.addEventListener("mouseover", function (e) {
+            randomize()
+        });
+    })
 })
 
-reset.addEventListener("click", function(e){
+reset.addEventListener("click", function (e) {
     clearContainer(pixelContainer);
     populatePixels(defaultPixel);
 })
